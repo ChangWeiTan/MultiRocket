@@ -1,2 +1,2 @@
 # MultiRocket
-Fast and Accurate Time Series Classification
+Effective summary statistics for convolutional outputs in time series classification
