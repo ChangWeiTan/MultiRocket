@@ -42,6 +42,9 @@ from the [UCR Time Series Classification Archive](https://www.cs.ucr.edu/~eamonn
 MultiRocket is on average the current most accurate scalable TSC algorithm, that is more accurate than 
 HIVE-COTE/TDE (HC-TDE).
 ![image](results/figures/cd_multirocket_sota_resample.png)
+
+The following is the total compute time for 109 UCR datasets. 
+Compute times are averaged over 30 resamples of 109 UCR datasets and run on a cluster using 32 threads on AMD EPYC 7702 CPUs.
 ![image](results/figures/timings_vs_minirocket.png)
 
 ## Reference
