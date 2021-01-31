@@ -10,6 +10,16 @@ features produced by the transform, making MultiRocket (for MiniRocket with Mult
 overall the single most accurate method on the datasets in the UCR archive, while still being 
 orders of magnitude faster than any algorithm of comparable accuracy other than its precursors.
 
+## Reference
+If you use any part of this work, please cite:
+```
+@article{Tan2021MultiRocket,
+  title={MultiRocket: Effective summary statistics for convolutional outputs in time series classification},
+  author={Tan, Chang Wei and Dempster, Angus and Bergmeir, Christoph and Webb, Geoffrey I},
+  year={2021}
+}
+```
+
 ## Requirements
 All python packages needed are listed in [requirements.txt](requirements.txt) file 
 and can be installed simply using the pip command. 
@@ -175,15 +185,7 @@ found in [results](results/all_resamples_average.csv).
 
 [MultiRocket variants results](results/results_128_resample_0.csv) contains the results for MultiRocket variants on the full 128 UCR datasets.
 
-## Reference
-If you use any part of this work, please cite:
-```
-@article{Tan2021MultiRocket,
-  title={MultiRocket: Effective summary statistics for convolutional outputs in time series classification},
-  author={Tan, Chang Wei and Dempster, Angus and Bergmeir, Christoph and Webb, Geoffrey I},
-  year={2021}
-}
-```
+
 
 ## Acknowledgement
 We would like to thank Professor Eamonn Keogh, Professor Tony Bagnall and their team who have provided the 
