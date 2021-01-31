@@ -49,7 +49,7 @@ HIVE-COTE/TDE (HC-TDE).
 
 The following shows the total compute time for 109 UCR datasets. 
 Compute times are averaged over 30 resamples of 109 UCR datasets and run on a cluster using 32 threads on AMD EPYC 7702 CPUs.
-![image](results/figures/timings_vs_minirocket.png
+![image](results/figures/timings_vs_minirocket.png)
 
 |dataset_name                  |BOSS       |CIF        |Catch22    |HC-CIF     |HC-TDE     |HIVE-COTEv1_0|InceptionTime|MiniRocket |MiniRocket_40k|ProximityForest|RISE       |ROCKET     |ResNet     |Rocket_40k |S-BOSS     |STC        |TDE        |TS-CHIEF   |TSF        |WEASEL     |cBOSS      |MultiRocket|minirocket_202_20k|minirocket_202_40k|minirocket_302_30k|minirocket_304_30k|minirocket_48_20k|minirocket_48_40k|minirocket_58_30k|minirocket_60_40k|rocket_201_20k|rocket_202_20k|rocket_304_30k|rocket_48_20k|rocket_48_40k|rocket_58_30k|
 |------------------------------|-----------|-----------|-----------|-----------|-----------|-------------|-------------|-----------|--------------|---------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|------------------|------------------|------------------|------------------|-----------------|-----------------|-----------------|-----------------|--------------|--------------|--------------|-------------|-------------|-------------|
