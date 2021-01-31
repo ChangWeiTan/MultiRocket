@@ -56,8 +56,8 @@ HIVE-COTE/TDE (HC-TDE).
 </p>
 
 <p float="center" align="center">
-  <img src="results/figures/annotated_scatter_multirocket_vs_hc_resample.png" width="450" align="center"/>
-  <img src="results/figures/scatter_multirocket_vs_minirocket_resample.png" width="450" align="center"/>
+  <img src="results/figures/annotated_scatter_multirocket_vs_hc_resample.png" width="400" align="center"/>
+  <img src="results/figures/scatter_multirocket_vs_minirocket_resample.png" width="400" align="center"/>
 </p>
 
 
