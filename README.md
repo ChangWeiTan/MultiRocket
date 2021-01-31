@@ -41,15 +41,21 @@ These are the results on 30 resamples of the 109 UCR Time Series archive
 from the [UCR Time Series Classification Archive](https://www.cs.ucr.edu/~eamonn/time_series_data_2018/).
 MultiRocket is on average the current most accurate scalable TSC algorithm, that is more accurate than 
 HIVE-COTE/TDE (HC-TDE).
-![image](results/figures/cd_multirocket_sota_resample.png)
+<p align="center">
+  <img src="results/figures/cd_multirocket_sota_resample.png"/>
+</p>
 
-![image](results/figures/annotated_scatter_multirocket_vs_hc_resample.png)
-![image](results/figures/scatter_multirocket_vs_minirocket_resample.png)
+<p float="center" align="center">
+  <img src="results/figures/annotated_scatter_multirocket_vs_hc_resample.png" width="450" align="center"/>
+  <img src="results/figures/scatter_multirocket_vs_minirocket_resample.png" width="450" align="center"/>
+</p>
 
 
 The following shows the total compute time for 109 UCR datasets. 
 Compute times are averaged over 30 resamples of 109 UCR datasets and run on a cluster using 32 threads on AMD EPYC 7702 CPUs.
-![image](results/figures/timings_vs_minirocket.png)
+<p align="center">
+  <img src="results/figures/timings_vs_minirocket.png" width="600" align="center"/>
+</p>
 
 |dataset_name                  |BOSS       |CIF        |Catch22    |HC-CIF     |HC-TDE     |HIVE-COTEv1_0|InceptionTime|MiniRocket |MiniRocket_40k|ProximityForest|RISE       |ROCKET     |ResNet     |Rocket_40k |S-BOSS     |STC        |TDE        |TS-CHIEF   |TSF        |WEASEL     |cBOSS      |MultiRocket|minirocket_202_20k|minirocket_202_40k|minirocket_302_30k|minirocket_304_30k|minirocket_48_20k|minirocket_48_40k|minirocket_58_30k|minirocket_60_40k|rocket_201_20k|rocket_202_20k|rocket_304_30k|rocket_48_20k|rocket_48_40k|rocket_58_30k|
 |------------------------------|-----------|-----------|-----------|-----------|-----------|-------------|-------------|-----------|--------------|---------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|------------------|------------------|------------------|------------------|-----------------|-----------------|-----------------|-----------------|--------------|--------------|--------------|-------------|-------------|-------------|
