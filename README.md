@@ -18,7 +18,7 @@ and can be installed simply using the pip command.
 * [numpy](https://numpy.org/)
 * [numba](http://numba.pydata.org/) 
 * [sklearn](https://scikit-learn.org/stable/)
-* catch22 (optional)
+* [catch22](https://github.com/chlubba/catch22) (optional)
 
 ## Code
 The [main.py](main.py) file contains a simple code to run the program on a single UCR dataset.
@@ -42,6 +42,7 @@ from the [UCR Time Series Classification Archive](https://www.cs.ucr.edu/~eamonn
 MultiRocket is on average the current most accurate scalable TSC algorithm, that is more accurate than 
 HIVE-COTE/TDE (HC-TDE).
 ![image](results/figures/cd_multirocket_sota_resample.png)
+![image](results/figures/timings_vs_minirocket.png)
 
 ## Reference
 If you use any part of this work, please cite:
@@ -56,6 +57,6 @@ If you use any part of this work, please cite:
 ## Acknowledgement
 We would like to thank Professor Eamonn Keogh, Professor Tony Bagnall and their team who have provided the 
 [UCR time series classification archive](https://www.cs.ucr.edu/~eamonn/time_series_data_2018/) and 
-making a comprehensive benchmark results widely available.
+making a comprehensive benchmark [results](http://timeseriesclassification.com/results.php) widely available.
 We also appreciate the open source code to draw the critical difference diagrams from 
 [Hassan Fawaz](https://github.com/hfawaz/cd-diagram).
