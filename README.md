@@ -11,7 +11,7 @@ overall the single most accurate method on the datasets in the UCR archive, whil
 orders of magnitude faster than any algorithm of comparable accuracy other than its precursors.
 
 ## Requirements
-All python packages needed are listed in [pip-requirements.txt](pip-requirements.txt) file 
+All python packages needed are listed in [requirements.txt](requirements.txt) file 
 and can be installed simply using the pip command. 
 
 * [pandas](https://pandas.pydata.org/)
