@@ -13,7 +13,7 @@ import pytz
 from sklearn.metrics import accuracy_score
 
 from multirocket.multirocket import MultiRocket
-from utils.data_loader import read_univariate_ucr, get_classification_datasets_summary
+from utils.data_loader import read_univariate_ucr, get_classification_datasets_summary, non_109_datasets
 from utils.tools import create_directory
 
 pd.set_option('display.max_columns', 500)
@@ -110,7 +110,7 @@ if __name__ == '__main__':
             X_train, y_train = read_univariate_ucr(train_file, normalise=True)
             X_test, y_test = read_univariate_ucr(test_file, normalise=True)
 
-        if itr > 0:
+        if (itr > 0) and (problem not in non_109_datasets):
             all_data = np.vstack((X_train, X_test))
             all_labels = np.hstack((y_train, y_test))
             print(all_data.shape)

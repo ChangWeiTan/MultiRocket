@@ -14,7 +14,7 @@ import pytz
 from sklearn.metrics import accuracy_score
 
 from multirocket.multirocket import MultiRocket
-from utils.data_loader import read_univariate_ucr
+from utils.data_loader import read_univariate_ucr, non_109_datasets
 from utils.tools import create_directory
 
 pd.set_option('display.max_columns', 500)
@@ -22,7 +22,7 @@ pd.set_option('display.max_columns', 500)
 data_path = "data/sample/"
 problem = "ECG200"
 itr = 0
-kernel_selection = 1
+kernel_selection = 0
 num_features = 10000
 feature_id = 202
 save = True
