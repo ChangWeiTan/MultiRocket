@@ -184,7 +184,9 @@ The results for other classifiers can also be obtained from [timeseriesclassific
 |Yoga                          |0.922988889|0.921466667|0.913566667|0.912433333  |0.872633333|0.918688933|0.921788889   |0.913844444|0.915422222|0.912311111  |0.877211111|0.928633333|0.874255555|0.887444444    |0.879988889|0.8372     |0.915055556|0.892377778|0.912122222|0.910155556|0.803822222|0.8658     |0.924055556       |0.926322222       |0.923255556       |0.9228            |0.918022222      |0.920166667      |0.922966667      |0.922511111      |0.919211111   |0.921433333   |0.918077778   |0.904577778  |0.906522222  |0.920588889  |
 
 
-[MultiRocket variants results](results/results_128_resample_0.csv) contains the results for MultiRocket variants on the full 128 UCR datasets.
+[Here](results/results_128_resample_0.csv) are the results for some MultiRocket variants on the full 128 UCR datasets.
+
+[Here](results/resamples/) are the results for some MultiRocket variants on 30 resamples of 109 UCR datasets.
 
 
 
