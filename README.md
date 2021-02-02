@@ -68,7 +68,8 @@ Compute times are averaged over 30 resamples of 109 UCR datasets and run on a cl
 </p>
 
 The following table contains the averaged accuracy over 30 resamples of 109 UCR datasets, 
-found in [results](results/all_resamples_average.csv).
+found in [results](results/all_resamples_average.csv). 
+The results for other classifiers can also be obtained from [timeseriesclassification.com](http://timeseriesclassification.com/results.php).
 
 |dataset_name                  |MultiRocket|HC-TDE     |HC-CIF     |HIVE-COTEv1_0|TS-CHIEF   |MiniRocket |MiniRocket_40k|Rocket     |Rocket_40k |InceptionTime|ResNet     |TDE        |CIF        |ProximityForest|STC        |RISE       |S-BOSS     |WEASEL     |cBOSS      |BOSS       |Catch22    |TSF        |minirocket_202_20k|minirocket_202_40k|minirocket_302_30k|minirocket_304_30k|minirocket_48_20k|minirocket_48_40k|minirocket_58_30k|minirocket_60_40k|rocket_201_20k|rocket_202_20k|rocket_304_30k|rocket_48_20k|rocket_48_40k|rocket_58_30k|
 |------------------------------|-----------|-----------|-----------|-------------|-----------|-----------|--------------|-----------|-----------|-------------|-----------|-----------|-----------|---------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|------------------|------------------|------------------|------------------|-----------------|-----------------|-----------------|-----------------|--------------|--------------|--------------|-------------|-------------|-------------|
