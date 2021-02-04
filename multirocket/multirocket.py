@@ -1,6 +1,7 @@
 # Chang Wei Tan, Angus Dempster, Christoph Bergmeir, Geoffrey I Webb
 #
 # MultiRocket: Effective summary statistics for convolutional outputs in time series classification
+# https://arxiv.org/abs/2102.00457
 
 import time
 

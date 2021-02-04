@@ -2,21 +2,18 @@
 
 **Effective summary statistics for convolutional outputs in time series classification**
 
-Rocket and MiniRocket, while two of the fastest methods for time series classification, 
-are both somewhat less accurate than the current most accurate methods (namely, HIVE-COTE and 
-its variants).  We show that it is possible to significantly improve the accuracy of 
-MiniRocket (and Rocket), with some additional computational expense, by expanding the set of 
-features produced by the transform, making MultiRocket (for MiniRocket with Multiple Features) 
-overall the single most accurate method on the datasets in the UCR archive, while still being 
-orders of magnitude faster than any algorithm of comparable accuracy other than its precursors.
+*Preprint*: [arxiv:2102.00457](https://arxiv.org/abs/2102.00457)
+
+> <div align="justify"> Rocket and MiniRocket, while two of the fastest methods for time series classification, are both somewhat less accurate than the current most accurate methods (namely, HIVE-COTE and its variants). We show that it is possible to significantly improve the accuracy of MiniRocket (and Rocket), with some additional computational expense, by expanding the set of features produced by the transform, making MultiRocket (for MiniRocket with Multiple Features) overall the single most accurate method on the datasets in the UCR archive, while still being orders of magnitude faster than any algorithm of comparable accuracy other than its precursors.
 
 ## Reference
 If you use any part of this work, please cite:
 ```
 @article{Tan2021MultiRocket,
-  title={MultiRocket: Effective summary statistics for convolutional outputs in time series classification},
+  title={{MultiRocket}: Effective summary statistics for convolutional outputs in time series classification},
   author={Tan, Chang Wei and Dempster, Angus and Bergmeir, Christoph and Webb, Geoffrey I},
-  year={2021}
+  year={2021},
+  journal={arxiv:2102.00457}
 }
 ```
 
