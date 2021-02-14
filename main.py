@@ -1,3 +1,7 @@
+# Chang Wei Tan, Angus Dempster, Christoph Bergmeir, Geoffrey I Webb
+#
+# MultiRocket: Effective summary statistics for convolutional outputs in time series classification
+# https://arxiv.org/abs/2102.00457
 import getopt
 import os
 import platform
@@ -65,7 +69,10 @@ if __name__ == '__main__':
             numba.set_num_threads(num_threads)
         output_path = os.getcwd() + "/output/"
 
-        classifier_name = "MultiRocket{}_{}_{}".format(kernel_selection, feature_id, num_features)
+        if kernel_selection == 0:
+            classifier_name = "MiniRocket_{}_{}".format(feature_id, num_features)
+        else:
+            classifier_name = "Rocket_{}_{}".format(feature_id, num_features)
 
         flag = False
         start = time.perf_counter()
@@ -101,8 +108,9 @@ if __name__ == '__main__':
             X_train = X_train.astype(np.float32)
             X_test = X_test.astype(np.float32)
 
-            X_train = X_train.reshape((X_train.shape[0], X_train.shape[1]))
-            X_test = X_test.reshape((X_test.shape[0], X_test.shape[1]))
+            # using minirocket_multivariate, so need 3 shapes (n_instances, time, channel)
+            # X_train = X_train.reshape((X_train.shape[0], X_train.shape[1]))
+            # X_test = X_test.reshape((X_test.shape[0], X_test.shape[1]))
         else:
             print("Loading data")
             X_train, y_train = read_univariate_ucr(train_file, normalise=True)

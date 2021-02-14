@@ -9,7 +9,8 @@ import numpy as np
 from sklearn.linear_model import RidgeClassifierCV
 
 from multirocket import feature_names, get_feature_set
-from multirocket import minirocket as minirocket
+# from multirocket import minirocket as minirocket
+from multirocket import minirocket_multivariate as minirocket  # use multivariate version.
 from multirocket import rocket as rocket
 
 
@@ -25,7 +26,10 @@ class MultiRocket:
         :param feature_id: feature id to identify the feature combinations
         :param kernel_selection: 0 = minirocket kernels, 1 = rocket kernels
         """
-        self.name = "MultiRocket_{}_{}".format(feature_id, num_features)
+        if kernel_selection == 0:
+            self.name = "MiniRocket_{}_{}".format(feature_id, num_features)
+        else:
+            self.name = "Rocket_{}_{}".format(feature_id, num_features)
 
         self.kernels = None
         self.kernel_selection = kernel_selection

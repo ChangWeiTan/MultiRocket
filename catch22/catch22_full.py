@@ -578,7 +578,6 @@ def pd_periodicity_wang_th0_01(y):
     """
     Periodicity measure of (Wang et al. 2007)
     """
-    # todo incorrect
     len_y = len(y)
     if len_y < 4:
         # following matlab code
