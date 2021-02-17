@@ -216,8 +216,7 @@ def _Conv(a, b):
 
 
 @njit("float32[:,:](float32[:,:,:],Tuple((int32[:],int32[:],int32[:],int32[:],float32[:],int32[:,:])))", fastmath=True,
-      parallel=True,
-      cache=True)
+      parallel=True, cache=True)
 def transform(X, parameters):
     n_instances, n_timepoints, n_columns = X.shape
 
