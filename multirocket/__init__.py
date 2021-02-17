@@ -351,7 +351,7 @@ def sample_base_feature_ids(feature_selection, num_features, num_rows):
     elif feature_selection in (202, 204, 205, 302, 303, 305):
         # set the first feature as PPV
         # uniformly sample the rest for the remaining rows
-        feature_ids = np.full((num_rows, len(fixed_features)),
+        feature_ids = np.full((num_rows, num_features),
                               fixed_features[0], dtype=np.int32)
         for i in range(num_rows):
             feature_ids[i, 1:] = np.random.choice(optional_features, size=r, replace=False)

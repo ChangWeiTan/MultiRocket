@@ -41,20 +41,21 @@ class MultiRocket:
         self.fixed_features = fixed_features
         self.optional_features = optional_features
         self.num_random_features = num_random_features
-        self.num_kernels = int(num_features / (len(fixed_features) + num_random_features))
+        self.n_features_per_kernel = len(fixed_features) + num_random_features
+        self.num_kernels = int(num_features / self.n_features_per_kernel)
 
         fixed_features_list = [feature_names[x] for x in self.fixed_features]
         optional_features_list = [feature_names[x] for x in self.optional_features]
         self.feature_list = fixed_features_list + optional_features_list
         print('FeatureID: {} -- features for each kernel: {}'.format(self.feature_id, self.feature_list))
 
-        if feature_id >= 100:
-            self.n_features_per_kernel = int(feature_id / 100)
-        elif feature_id == 52:
-            self.n_features_per_kernel = 22
-        else:
-            tmp = feature_names[feature_id].split("+")
-            self.n_features_per_kernel = len(tmp)
+        # if feature_id >= 100:
+        #     self.n_features_per_kernel = int(feature_id / 100)
+        # elif feature_id == 52:
+        #     self.n_features_per_kernel = 22
+        # else:
+        #     tmp = feature_names[feature_id].split("+")
+        #     self.n_features_per_kernel = len(tmp)
 
         print('Creating {} with {} kernels'.format(self.name, self.num_kernels))
         self.classifier = RidgeClassifierCV(alphas=np.logspace(-3, 3, 10),
