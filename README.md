@@ -33,7 +33,7 @@ The [main.py](main_ucr.py) file contains a simple code to run the program on a s
 
 The [main_ucr_109.py](main_ucr_109.py) file runs the program on all 109 UCR datasets.
 
-The [main_ucr_109.py](main_mtsc.py) file contains a simple code to run the program on a single [MTSC](http://timeseriesclassification.com/dataset.php) dataset.
+The [main_mtsc.py](main_mtsc.py) file contains a simple code to run the program on a single [MTSC](http://timeseriesclassification.com/dataset.php) dataset.
 ```
 Arguments:
 -d --data_path          : path to dataset
