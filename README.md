@@ -26,11 +26,14 @@ and can be installed simply using the pip command.
 * [numba](http://numba.pydata.org/) 
 * [sklearn](https://scikit-learn.org/stable/)
 * [catch22](https://github.com/chlubba/catch22) (optional)
+* [sktime](https://github.com/alan-turing-institute/sktime) (required for MTSC)
 
 ## Code
-The [main.py](main.py) file contains a simple code to run the program on a single UCR dataset.
+The [main.py](main_ucr.py) file contains a simple code to run the program on a single UCR dataset.
 
 The [main_ucr_109.py](main_ucr_109.py) file runs the program on all 109 UCR datasets.
+
+The [main_ucr_109.py](main_mtsc.py) file contains a simple code to run the program on a single [MTSC](http://timeseriesclassification.com/dataset.php) dataset.
 ```
 Arguments:
 -d --data_path          : path to dataset

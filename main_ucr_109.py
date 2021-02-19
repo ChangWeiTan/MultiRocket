@@ -107,8 +107,13 @@ if __name__ == '__main__':
             X_train, y_train = read_univariate_ucr(train_file, normalise=False)
             X_test, y_test = read_univariate_ucr(test_file, normalise=False)
 
+            # for now, change type to float32. will standardise in future.
             X_train = X_train.astype(np.float32)
             X_test = X_test.astype(np.float32)
+
+            # swap the axes for minirocket kernels. will standardise the axes in future.
+            X_train = X_train.swapaxes(1, 2)
+            X_test = X_test.swapaxes(1, 2)
 
             # using minirocket_multivariate, so need 3 shapes (n_instances, time, channel)
             # X_train = X_train.reshape((X_train.shape[0], X_train.shape[1]))
