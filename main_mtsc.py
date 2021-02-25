@@ -25,7 +25,7 @@ from utils.tools import create_directory
 pd.set_option('display.max_columns', 500)
 
 data_path = "data/sample_mtsc/"
-problem = "EthanolConcentration"
+problem = "BasicMotions"
 itr = 0
 kernel_selection = 0
 num_features = 10000
@@ -111,10 +111,6 @@ if __name__ == '__main__':
             # for now, change type to float32. will standardise in future.
             X_train = X_train.astype(np.float32)
             X_test = X_test.astype(np.float32)
-
-            # swap the axes for minirocket kernels. will standardise the axes in future.
-            X_train = X_train.swapaxes(1, 2)
-            X_test = X_test.swapaxes(1, 2)
 
             # using minirocket_multivariate, so need 3 shapes (n_instances, channel, time)
             # X_train = X_train.reshape((X_train.shape[0], X_train.shape[1]))

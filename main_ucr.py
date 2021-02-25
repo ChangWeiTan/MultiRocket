@@ -109,10 +109,6 @@ if __name__ == '__main__':
             X_train = X_train.astype(np.float32)
             X_test = X_test.astype(np.float32)
 
-            # swap the axes for minirocket kernels. will standardise the axes in future.
-            X_train = X_train.swapaxes(1, 2)
-            X_test = X_test.swapaxes(1, 2)
-
             # using minirocket_multivariate, so need 3 shapes (n_instances, channel, time)
             # X_train = X_train.reshape((X_train.shape[0], X_train.shape[1]))
             # X_test = X_test.reshape((X_test.shape[0], X_test.shape[1]))

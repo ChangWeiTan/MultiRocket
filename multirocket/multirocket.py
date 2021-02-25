@@ -64,6 +64,9 @@ class MultiRocket:
 
         print('[{}] Training with training set of {}'.format(self.name, x_train.shape))
         if self.kernel_selection == 0:
+            # swap the axes for minirocket kernels. will standardise the axes in future.
+            x_train = x_train.swapaxes(1, 2)
+
             _start_time = time.perf_counter()
             self.kernels = minirocket.fit(x_train,
                                           self.feature_id,
@@ -109,6 +112,9 @@ class MultiRocket:
         start_time = time.perf_counter()
 
         if self.kernel_selection == 0:
+            # swap the axes for minirocket kernels. will standardise the axes in future.
+            x = x.swapaxes(1, 2)
+
             x_test_transform = minirocket.transform(x, self.kernels)
         else:
             x_test_transform = rocket.apply_kernels(x, self.kernels, self.feature_id)
