@@ -6,7 +6,8 @@
 import numpy as np
 from numba import njit
 
-from catch22.catch22_full import sb_binarystats_mean_longstretch_1, sb_motif_three_quantile_hh, \
+
+from catch22A.catch22_full import sb_binarystats_mean_longstretch_1, sb_motif_three_quantile_hh, \
     co_histogram_ami_even_2_5, dn_histogram_mode_5, dn_histogram_mode_10, co_f1ecac, co_firstmin_ac, co_trev_1_num, \
     md_hrv_classic_pnn40, sb_transition_matrix_3ac_sum_diag_cov, pd_periodicity_wang_th0_01, \
     co_embed2_dist_tau_d_expfit_meandiff, in_auto_mutual_info_stats_40_gaussian_fmmi, fc_local_simple_mean1_tauresrat, \
@@ -14,6 +15,11 @@ from catch22.catch22_full import sb_binarystats_mean_longstretch_1, sb_motif_thr
     sb_binarystats_diff_longstretch_0, sc_fluct_anal_2_rsrangefit_50_1_logi_prop_r1, \
     sc_fluct_anal_2_dfa_50_1_2_logi_prop_r1, sp_summaries_welch_rect_centroid, fc_local_simple_mean3_stderr
 from utils.tools import numba_fft_v, autocorr
+
+__version__ = "0.0.1"
+
+def get_module_version():
+    return __version__
 
 # Original Rocket is feature 50 with Rocket Kernels
 # Original MiniRocket is feature 23 with Minirocket Kernels
