@@ -11,7 +11,7 @@ from numba import njit
 # Implemented with Numba, following the Java implementation from
 # https://github.com/uea-machine-learning/tsml/blob/master/src/main/java/tsml/transformers/Catch22.java
 # =======================================================================================================
-from catch22.catch22_basis import histogram_mode, outlier_include, summaries_welth_rect, local_simple_mean, \
+from catch22A.catch22_basis import histogram_mode, outlier_include, summaries_welth_rect, local_simple_mean, \
     co_first_zero, fluct_prop, splinefit
 from utils.tools import autocorr, numba_std, numba_fft_v
 

@@ -1,0 +1,6 @@
+numba==0.50.1
+numpy==1.18.5
+pandas==1.0.5
+scikit_learn==0.23.1
+catch22==0.1.0
+sktime==0.4.3
