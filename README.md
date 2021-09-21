@@ -38,10 +38,11 @@ The [main_mtsc.py](main_mtsc.py) file contains a simple code to run the program 
 Arguments:
 -d --data_path          : path to dataset
 -p --problem            : dataset name
--i --iteration          : determines the resample of the UCR datasets
+-i --iter               : determines the resample of the UCR datasets
 -n --num_features       : number of features 
 -t --num_threads        : number of threads (> 0)
 -s --save               : 0=don't save results, 1=save results
+-v --verbose            : verbosity
 ``` 
 
 ## Results
@@ -75,7 +76,8 @@ The following compares the total training time for 112 UCR datasets against some
 The first four algorithms are computed using a single thread on AMD EPYC 7702 CPU. 
 The rest of the results are obtained from the paper [HIVE-COTE 2.0: a new meta ensemble for time series classification](https://arxiv.org/abs/2104.07551)
 
-[comment]: <> (<div align="center">)
+<div align="center">
+
 | TSC algorithm | Total train time |
 |---------------|------------------|
 | MiniRocket (default 10k features) | 2.44 minutes |
@@ -92,7 +94,7 @@ The rest of the results are obtained from the paper [HIVE-COTE 2.0: a new meta e
 | HIVE-COTE 1.0 | 427.18 hours |
 | TS-CHIEF | 1016.87  hours |
 
-[comment]: <> (</div>)
+</div>
 
 
 The following table contains the averaged accuracy over 30 resamples of 109 UCR datasets, 
