@@ -1,12 +1,11 @@
 # Chang Wei Tan, Angus Dempster, Christoph Bergmeir, Geoffrey I Webb
 #
-# MultiRocket: Effective summary statistics for convolutional outputs in time series classification
+# MultiRocket: Multiple pooling operators and transformations for fast and effective time series classification
 # https://arxiv.org/abs/2102.00457
-import getopt
+import argparse
 import os
 import platform
 import socket
-import sys
 from datetime import datetime
 
 import numba
@@ -22,102 +21,81 @@ from utils.tools import create_directory
 
 pd.set_option('display.max_columns', 500)
 
-data_path = "data/sample/"
 itr = 0
-kernel_selection = 0
 num_features = 10000
-feature_id = 202
 save = True
 num_threads = 0
 
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "hd:i:f:n:k:t:s:",
-                               ["data_path=", "iter=", "featureid=", "num_features=",
-                                "kernel_selection=", "num_threads=", "save="])
-except getopt.GetoptError:
-    print("main_ucr_109.py -d <data_path> -i <iteration> -f <featureid> -n <num_features>"
-          "-k <kernel_selection> -t <num_threads> -s <save>")
-    sys.exit(2)
-for opt, arg in opts:
-    if opt == '-h':
-        print("main_ucr_109.py -d <data_path>> -i <iteration> -f <featureid> -n <num_features>"
-              "-k <kernel_selection> -t <num_threads> -s <save>")
-        sys.exit()
-    elif opt in ("-d", "--data_path"):
-        data_path = arg
-    elif opt in ("-i", "--iter"):
-        itr = int(arg)
-    elif opt in ("-f", "--featureid"):
-        feature_id = int(arg)
-    elif opt in ("-n", "--num_features"):
-        num_features = int(arg)
-    elif opt in ("-k", "--kernel_selection"):
-        kernel_selection = int(arg)
-    elif opt in ("-t", "--num_threads"):
-        num_threads = min(int(arg), psutil.cpu_count(logical=True))
-    elif opt in ("-s", "--save"):
-        save = bool(int(arg))
+parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--datapath", type=str, required=False, default="data/sample/")
+parser.add_argument("-p", "--problem", type=str, required=False, default="ECG200")
+parser.add_argument("-i", "--iter", type=int, required=False, default=0)
+parser.add_argument("-n", "--num_features", type=int, required=False, default=50000)
+parser.add_argument("-t", "--num_threads", type=int, required=False, default=-1)
+parser.add_argument("-s", "--save", type=bool, required=False, default=True)
+parser.add_argument("-v", "--verbose", type=int, required=False, default=2)
+
+arguments = parser.parse_args()
 
 if __name__ == '__main__':
+    data_path = arguments.datapath
+    problem = arguments.problem
+    num_features = arguments.num_features
+    num_threads = arguments.num_threads
+    itr = arguments.iter
+    save = arguments.save
+    verbose = arguments.verbose
+
+    output_path = os.getcwd() + "/output/"
+    classifier_name = "MultiRocket_{}".format(num_features)
+
+    datasets = get_classification_datasets_summary(subset="109")
+    if problem == "":
+        datasets["Train/Test"] = datasets["Train"] + datasets["Test"]
+        datasets.sort_values(by="Train/Test", inplace=True)
+        datasets.reset_index(inplace=True, drop=True)
+    else:
+        problem = problem.split(";")
+        datasets = datasets.loc[datasets.Name.isin(problem)].reset_index(drop=True)
+
     if num_threads > 0:
         numba.set_num_threads(num_threads)
-    output_path = os.getcwd() + "/output/"
 
-    if kernel_selection == 0:
-        classifier_name = "MiniRocket_{}_{}".format(feature_id, num_features)
-    else:
-        classifier_name = "Rocket_{}_{}".format(feature_id, num_features)
-
-    df = get_classification_datasets_summary(subset="109")
-    df["Train/Test"] = df["Train"] + df["Test"]
-    df.sort_values(by="Train/Test", inplace=True)
-    df.reset_index(inplace=True, drop=True)
-
-    flag = False
-    for i in range(len(df)):
-        problem = df.Name[i].strip()
-
+    for i in range(len(datasets)):
+        problem = datasets.Name[i].strip()
         data_folder = data_path + problem + "/"
         if not os.path.exists(data_folder):
             continue
 
-        output_dir = "{}/multirocket/resample_{}/{}/{}/".format(output_path,
-                                                                itr,
-                                                                classifier_name,
-                                                                problem)
+        output_dir = "{}/multirocket/resample_{}/{}/{}/".format(
+            output_path,
+            itr,
+            classifier_name,
+            problem
+        )
         if save:
             create_directory(output_dir)
 
         print("=======================================================================")
-        print("[{}] Starting Experiments")
+        print("Starting Experiments")
         print("=======================================================================")
         print("Data path: {}".format(data_path))
         print("Output Dir: {}".format(output_dir))
         print("Iteration: {}".format(itr))
         print("Problem: {}".format(problem))
-        print("Feature ID: {}".format(feature_id))
         print("Number of Features: {}".format(num_features))
-        print("Kernels Selection: {}".format(kernel_selection))
 
+        # use tsv. Change the data loader for other file format
         train_file = data_folder + problem + "_TRAIN.tsv"
         test_file = data_folder + problem + "_TEST.tsv"
 
-        if kernel_selection == 0:
-            print("Loading data")
-            X_train, y_train = read_univariate_ucr(train_file, normalise=False)
-            X_test, y_test = read_univariate_ucr(test_file, normalise=False)
+        print("Loading data")
+        X_train, y_train = read_univariate_ucr(train_file, normalise=False)
+        X_test, y_test = read_univariate_ucr(test_file, normalise=False)
 
-            # for now, change type to float32. will standardise in future.
-            X_train = X_train.astype(np.float32)
-            X_test = X_test.astype(np.float32)
-
-            # using minirocket_multivariate, so need 3 shapes (n_instances, time, channel)
-            # X_train = X_train.reshape((X_train.shape[0], X_train.shape[1]))
-            # X_test = X_test.reshape((X_test.shape[0], X_test.shape[1]))
-        else:
-            print("Loading data")
-            X_train, y_train = read_univariate_ucr(train_file, normalise=True)
-            X_test, y_test = read_univariate_ucr(test_file, normalise=True)
+        # returns ntc format, remove the last dimension
+        X_train = X_train.reshape((X_train.shape[0], X_train.shape[1]))
+        X_test = X_test.reshape((X_test.shape[0], X_test.shape[1]))
 
         if (itr > 0) and (problem not in non_109_datasets):
             all_data = np.vstack((X_train, X_test))
@@ -135,11 +113,15 @@ if __name__ == '__main__':
 
         nb_classes = len(np.unique(np.concatenate((y_train, y_test), axis=0)))
 
-        classifier = MultiRocket(num_features=num_features,
-                                 feature_id=feature_id,
-                                 kernel_selection=kernel_selection)
-        yhat_train = classifier.fit(X_train, y_train,
-                                    predict_on_train=False)
+        classifier = MultiRocket(
+            num_features=num_features,
+            verbose=verbose
+        )
+        yhat_train = classifier.fit(
+            X_train, y_train,
+            predict_on_train=False
+        )
+
         if yhat_train is not None:
             train_acc = accuracy_score(y_train, yhat_train)
         else:
@@ -156,15 +138,17 @@ if __name__ == '__main__':
         min_freq = cpu_freq.min
         memory = np.round(psutil.virtual_memory().total / 1e9)
 
-        df_metrics = pd.DataFrame(data=np.zeros((1, 20), dtype=np.float), index=[0],
+        df_metrics = pd.DataFrame(data=np.zeros((1, 21), dtype=np.float), index=[0],
                                   columns=['timestamp', 'itr', 'classifier',
-                                           'num_features', 'kernels_selection',
+                                           'num_features',
                                            'dataset',
                                            'train_acc', 'train_time',
                                            'test_acc', 'test_time',
                                            'generate_kernel_time',
                                            'apply_kernel_on_train_time',
                                            'apply_kernel_on_test_time',
+                                           'train_transform_time',
+                                           'test_transform_time',
                                            'machine', 'processor',
                                            'physical_cores',
                                            "logical_cores",
@@ -173,7 +157,6 @@ if __name__ == '__main__':
         df_metrics["itr"] = itr
         df_metrics["classifier"] = classifier_name
         df_metrics["num_features"] = num_features
-        df_metrics["kernels_selection"] = kernel_selection
         df_metrics["dataset"] = problem
         df_metrics["train_acc"] = train_acc
         df_metrics["train_time"] = classifier.train_duration
@@ -182,6 +165,8 @@ if __name__ == '__main__':
         df_metrics["generate_kernel_time"] = classifier.generate_kernel_duration
         df_metrics["apply_kernel_on_train_time"] = classifier.apply_kernel_on_train_duration
         df_metrics["apply_kernel_on_test_time"] = classifier.apply_kernel_on_test_duration
+        df_metrics["train_transform_time"] = classifier.train_transforms_duration
+        df_metrics["test_transform_time"] = classifier.test_transforms_duration
         df_metrics["machine"] = socket.gethostname()
         df_metrics["processor"] = platform.processor()
         df_metrics["physical_cores"] = physical_cores

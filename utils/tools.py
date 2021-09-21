@@ -1,6 +1,6 @@
 # Chang Wei Tan, Angus Dempster, Christoph Bergmeir, Geoffrey I Webb
 #
-# MultiRocket: Effective summary statistics for convolutional outputs in time series classification
+# MultiRocket: Multiple pooling operators and transformations for fast and effective time series classification
 # https://arxiv.org/abs/2102.00457
 
 import cmath
