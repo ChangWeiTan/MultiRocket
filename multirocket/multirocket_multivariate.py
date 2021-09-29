@@ -513,6 +513,13 @@ class MultiRocket:
     def fit(self, x_train, y_train, predict_on_train=True):
         if self.verbose > 1:
             print('[{}] Training with training set of {}'.format(self.name, x_train.shape))
+        if x_train.shape[2] < 10:
+            # handling very short series (like PensDigit from the MTSC archive)
+            # series have to be at least a length of 10 (including differencing)
+            _x_train = np.zeros((x_train.shape[0], x_train.shape[1], 10), dtype=x_train.dtype)
+            _x_train[:, :, :x_train.shape[2]] = x_train
+            x_train = _x_train
+            del _x_train
 
         self.generate_kernel_duration = 0
         self.apply_kernel_on_train_duration = 0

@@ -30,7 +30,7 @@ num_threads = 0
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--datapath", type=str, required=False, default="data/sample_mtsc/")
-parser.add_argument("-p", "--problem", type=str, required=False, default="ArticularyWordRecognition")
+parser.add_argument("-p", "--problem", type=str, required=False, default="PenDigits")
 parser.add_argument("-i", "--iter", type=int, required=False, default=0)
 parser.add_argument("-n", "--num_features", type=int, required=False, default=50000)
 parser.add_argument("-t", "--num_threads", type=int, required=False, default=-1)
