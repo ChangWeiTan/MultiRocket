@@ -74,6 +74,7 @@ Compute times are averaged over 30 resamples of 109 UCR datasets and run on a cl
 
 The following compares the total training time for 112 UCR datasets against some state of the arts.
 The first four algorithms are computed using a single thread on AMD EPYC 7702 CPU. 
+The single thread timing results can be found in [training time](results/train_time.csv), [test time](results/test_time.csv) and [total time](results/total_time.csv).
 The rest of the results are obtained from the paper [HIVE-COTE 2.0: a new meta ensemble for time series classification](https://arxiv.org/abs/2104.07551)
 
 <div align="center">
