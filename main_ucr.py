@@ -29,9 +29,9 @@ num_threads = 0
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--datapath", type=str, required=False, default="data/sample/")
-parser.add_argument("-p", "--problem", type=str, required=False, default="ECG200")
+parser.add_argument("-p", "--problem", type=str, required=False, default="ElectricDevices")
 parser.add_argument("-i", "--iter", type=int, required=False, default=0)
-parser.add_argument("-n", "--num_features", type=int, required=False, default=50000)
+parser.add_argument("-n", "--num_features", type=int, required=False, default=50050)
 parser.add_argument("-t", "--num_threads", type=int, required=False, default=-1)
 parser.add_argument("-s", "--save", type=bool, required=False, default=True)
 parser.add_argument("-v", "--verbose", type=int, required=False, default=2)
