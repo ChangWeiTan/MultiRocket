@@ -29,7 +29,7 @@ save = True
 num_threads = 0
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-d", "--datapath", type=str, required=False, default="data/sample_mtsc/")
+parser.add_argument("-d", "--datapath", type=str, required=False, default="C:/Users/changt/workspace/Dataset/Multivariate2018_ts/")
 parser.add_argument("-p", "--problem", type=str, required=False, default="PenDigits")
 parser.add_argument("-i", "--iter", type=int, required=False, default=0)
 parser.add_argument("-n", "--num_features", type=int, required=False, default=50000)
