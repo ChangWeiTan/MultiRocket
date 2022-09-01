@@ -15,6 +15,7 @@ import pandas as pd
 import psutil
 import pytz
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import LabelEncoder
 
 from multirocket.multirocket import MultiRocket
 from utils.data_loader import read_univariate_ucr, non_109_datasets
@@ -28,10 +29,10 @@ save = True
 num_threads = 0
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-d", "--datapath", type=str, required=False, default="data/sample/")
-parser.add_argument("-p", "--problem", type=str, required=False, default="ElectricDevices")
+parser.add_argument("-d", "--datapath", type=str, required=False, default="C:/Users/changt/workspace/Dataset/UCRArchive_2018/")
+parser.add_argument("-p", "--problem", type=str, required=False, default="HandOutlines")
 parser.add_argument("-i", "--iter", type=int, required=False, default=0)
-parser.add_argument("-n", "--num_features", type=int, required=False, default=50050)
+parser.add_argument("-n", "--num_features", type=int, required=False, default=50000)
 parser.add_argument("-t", "--num_threads", type=int, required=False, default=-1)
 parser.add_argument("-s", "--save", type=bool, required=False, default=True)
 parser.add_argument("-v", "--verbose", type=int, required=False, default=2)
@@ -84,6 +85,10 @@ if __name__ == '__main__':
         X_train, y_train = read_univariate_ucr(train_file, normalise=False)
         X_test, y_test = read_univariate_ucr(test_file, normalise=False)
 
+        encoder = LabelEncoder()
+        y_train = encoder.fit_transform(y_train)
+        y_test = encoder.transform(y_test)
+
         # returns ntc format, remove the last dimension
         X_train = X_train.reshape((X_train.shape[0], X_train.shape[1]))
         X_test = X_test.reshape((X_test.shape[0], X_test.shape[1]))
@@ -106,6 +111,7 @@ if __name__ == '__main__':
 
         classifier = MultiRocket(
             num_features=num_features,
+            classifier="ridge",
             verbose=verbose
         )
         yhat_train = classifier.fit(

@@ -15,7 +15,8 @@ import pandas as pd
 import psutil
 import pytz
 from sklearn.metrics import accuracy_score
-from sktime.utils.data_io import load_from_tsfile_to_dataframe
+from sklearn.preprocessing import LabelEncoder
+from sktime.datasets import load_from_tsfile_to_dataframe
 
 from multirocket.multirocket_multivariate import MultiRocket
 from utils.data_loader import process_ts_data
@@ -30,7 +31,7 @@ num_threads = 0
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--datapath", type=str, required=False, default="C:/Users/changt/workspace/Dataset/Multivariate2018_ts/")
-parser.add_argument("-p", "--problem", type=str, required=False, default="PenDigits")
+parser.add_argument("-p", "--problem", type=str, required=False, default="UWaveGestureLibrary")
 parser.add_argument("-i", "--iter", type=int, required=False, default=0)
 parser.add_argument("-n", "--num_features", type=int, required=False, default=50000)
 parser.add_argument("-t", "--num_threads", type=int, required=False, default=-1)
@@ -86,6 +87,10 @@ if __name__ == '__main__':
         X_train, y_train = load_from_tsfile_to_dataframe(train_file)
         X_test, y_test = load_from_tsfile_to_dataframe(test_file)
 
+        encoder = LabelEncoder()
+        y_train = encoder.fit_transform(y_train)
+        y_test = encoder.transform(y_test)
+
         X_train = process_ts_data(X_train, normalise=False)
         X_test = process_ts_data(X_test, normalise=False)
 
@@ -93,6 +98,7 @@ if __name__ == '__main__':
 
         classifier = MultiRocket(
             num_features=num_features,
+            classifier="logistic",
             verbose=verbose
         )
         yhat_train = classifier.fit(

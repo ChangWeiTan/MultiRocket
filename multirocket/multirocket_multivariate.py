@@ -8,6 +8,10 @@ import time
 import numpy as np
 from numba import njit, prange
 from sklearn.linear_model import RidgeClassifierCV
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+from multirocket.logistic_regression import LogisticRegression
 
 
 @njit("float32[:](float64[:,:,:],int32[:],int32[:],int32[:],int32[:],float32[:])",
@@ -169,8 +173,9 @@ def fit(X, num_features=10_000, max_dilations_per_kernel=32):
     return num_channels_per_combination, channel_indices, dilations, num_features_per_dilation, biases
 
 
-@njit("float32[:,:](float64[:,:,:],float64[:,:,:],Tuple((int32[:],int32[:],int32[:],int32[:],float32[:])),Tuple((int32[:],int32[:],int32[:],int32[:],float32[:])),int32)",
-      fastmath=True, parallel=True, cache=True)
+@njit(
+    "float32[:,:](float64[:,:,:],float64[:,:,:],Tuple((int32[:],int32[:],int32[:],int32[:],float32[:])),Tuple((int32[:],int32[:],int32[:],int32[:],float32[:])),int32)",
+    fastmath=True, parallel=True, cache=True)
 def transform(X, X1, parameters, parameters1, n_features_per_kernel=4):
     num_examples, num_channels, input_length = X.shape
 
@@ -481,6 +486,7 @@ class MultiRocket:
     def __init__(
             self,
             num_features=50000,
+            classifier="ridge",
             verbose=0
     ):
         self.name = "MultiRocket"
@@ -495,10 +501,19 @@ class MultiRocket:
         if verbose > 1:
             print('[{}] Creating {} with {} kernels'.format(self.name, self.name, self.num_kernels))
 
-        self.classifier = RidgeClassifierCV(
-            alphas=np.logspace(-3, 3, 10),
-            normalize=True
-        )
+        if classifier.lower() == "ridge":
+            self.classifier = make_pipeline(
+                StandardScaler(),
+                RidgeClassifierCV(
+                    alphas=np.logspace(-3, 3, 10),
+                    normalize=False
+                )
+            )
+        else:
+            self.classifier = LogisticRegression(
+                num_features=num_features,
+                max_epochs=200,
+            )
 
         self.train_duration = 0
         self.test_duration = 0

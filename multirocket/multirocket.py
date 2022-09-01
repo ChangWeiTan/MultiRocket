@@ -8,6 +8,10 @@ import time
 import numpy as np
 from numba import njit, prange
 from sklearn.linear_model import RidgeClassifierCV
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+from multirocket.logistic_regression import LogisticRegression
 
 
 @njit("float32[:](float64[:,:],int32[:],int32[:],float32[:])",
@@ -425,6 +429,7 @@ class MultiRocket:
     def __init__(
             self,
             num_features=50000,
+            classifier="ridge",
             verbose=0
     ):
         self.name = "MultiRocket"
@@ -439,10 +444,19 @@ class MultiRocket:
         if verbose > 1:
             print('[{}] Creating {} with {} kernels'.format(self.name, self.name, self.num_kernels))
 
-        self.classifier = RidgeClassifierCV(
-            alphas=np.logspace(-3, 3, 10),
-            normalize=True
-        )
+        if classifier.lower() == "ridge":
+            self.classifier = make_pipeline(
+                StandardScaler(),
+                RidgeClassifierCV(
+                    alphas=np.logspace(-3, 3, 10),
+                    normalize=False
+                )
+            )
+        else:
+            self.classifier = LogisticRegression(
+                num_features=num_features,
+                max_epochs=200,
+            )
 
         self.train_duration = 0
         self.test_duration = 0
