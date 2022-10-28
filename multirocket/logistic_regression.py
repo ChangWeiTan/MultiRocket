@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from tensorflow.keras.regularizers import l1_l2
+# from tensorflow.keras.regularizers import l1_l2
 
 
 class LogisticRegression:
@@ -52,10 +52,7 @@ class LogisticRegression:
         input_layer = tf.keras.layers.Input((x_train.shape[1],))
         output_layer = tf.keras.layers.Dense(
             out_dims,
-            activation=out_activation,
-            bias_initializer="zeros",
-            kernel_initializer="zeros",
-            kernel_regularizer=l1_l2(1e-3, 1e-3)
+            activation=out_activation
         )(input_layer)
         model = tf.keras.models.Model(
             inputs=input_layer,

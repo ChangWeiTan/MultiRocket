@@ -42,7 +42,7 @@ setup(
     long_description_content_type='text/markdown',
     packages=find_packages(include=['multirocket']),
     # py_modules=['utils'],
-    python_requires='>=3.6pip sh',
+    python_requires='>=3.6',
     install_requires=requirements,
     version=get_version("multirocket/__init__.py"),
     setup_requires=['setuptools_scm'],
