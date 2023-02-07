@@ -212,7 +212,10 @@ def get_classification_datasets_summary(dataset=None, subset="full"):
 
 
 def read_univariate_ucr(filename, normalise=True):
-    data = np.loadtxt(filename, delimiter='\t')
+    if "csv" in filename:
+        data = np.loadtxt(filename, delimiter=',')
+    else:
+        data = np.loadtxt(filename, delimiter='\t')
     Y = data[:, 0]
     X = data[:, 1:]
 
