@@ -27,6 +27,7 @@ and can be installed simply using the pip command.
 * [sklearn](https://scikit-learn.org/stable/)
 * [catch22](https://github.com/chlubba/catch22) (optional)
 * [sktime](https://github.com/alan-turing-institute/sktime) (required for MTSC)
+* [torch](https://pytorch.org/) (required for logistic regression)
 
 ## Code
 The [main.py](main_ucr.py) file contains a simple code to run the program on a single UCR dataset.
