@@ -30,7 +30,7 @@ num_threads = 0
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--datapath", type=str, required=False, default="C:/Users/changt/workspace/Dataset/UCRArchive_2018/")
-parser.add_argument("-p", "--problem", type=str, required=False, default="Crop")
+parser.add_argument("-p", "--problem", type=str, required=False, default="ACSF1")
 parser.add_argument("-i", "--iter", type=int, required=False, default=0)
 parser.add_argument("-n", "--num_features", type=int, required=False, default=50000)
 parser.add_argument("-t", "--num_threads", type=int, required=False, default=-1)
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
         classifier = MultiRocket(
             num_features=num_features,
-            classifier="ridge",
+            classifier="logistic",
             verbose=verbose
         )
         yhat_train = classifier.fit(

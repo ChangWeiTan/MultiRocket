@@ -444,20 +444,8 @@ class MultiRocket:
         if verbose > 1:
             print('[{}] Creating {} with {} kernels'.format(self.name, self.name, self.num_kernels))
 
-        if classifier.lower() == "ridge":
-            self.classifier = make_pipeline(
-                StandardScaler(),
-                RidgeClassifierCV(
-                    alphas=np.logspace(-3, 3, 10),
-                    normalize=False
-                )
-            )
-        else:
-            self.classifier = LogisticRegression(
-                num_features=num_features,
-                max_epochs=200,
-            )
-
+        self.clf = classifier
+        self.classifier = None
         self.train_duration = 0
         self.test_duration = 0
         self.generate_kernel_duration = 0
@@ -511,6 +499,19 @@ class MultiRocket:
         if self.verbose > 1:
             print('[{}] Training'.format(self.name))
 
+        if self.clf.lower() == "ridge":
+            self.classifier = make_pipeline(
+                StandardScaler(),
+                RidgeClassifierCV(
+                    alphas=np.logspace(-3, 3, 10),
+                    normalize=False
+                )
+            )
+        else:
+            self.classifier = LogisticRegression(
+                num_features=x_train_transform.shape[1],
+                max_epochs=200,
+            )
         _start_time = time.perf_counter()
         self.classifier.fit(x_train_transform, y_train)
         self.train_duration = time.perf_counter() - _start_time

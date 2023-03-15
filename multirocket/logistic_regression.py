@@ -1,11 +1,16 @@
+import copy
+
 import numpy as np
-import tensorflow as tf
+import torch
+import torch.nn.functional
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-# from tensorflow.keras.regularizers import l1_l2
+from sklearn.preprocessing import StandardScaler
+from torch.utils.data import TensorDataset, DataLoader
+from tqdm import tqdm
 
 
 class LogisticRegression:
+
     def __init__(
             self,
             num_features,
@@ -15,9 +20,9 @@ class LogisticRegression:
             learning_rate=1e-4,
             patience_lr=5,  # 50 minibatches
             patience=10,  # 100 minibatches
+            device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
     ):
         self.name = "LogisticRegression"
-
         self.args = {
             "num_features": num_features,
             "validation_size": validation_size,
@@ -27,98 +32,151 @@ class LogisticRegression:
             "patience_lr": patience_lr,
             "patience": patience,
         }
+
         self.model = None
-        self.num_classes = None
+        self.device = device
         self.classes = None
+        self.scaler = None
+        self.num_classes = None
 
     def fit(self, x_train, y_train):
-        training_size = x_train.shape[0]
+        self.classes = np.unique(y_train)
+        self.num_classes = len(self.classes)
 
-        args = self.args
+        num_outputs = self.num_classes if self.num_classes > 2 else 1
+        train_steps = int(x_train.shape[0] / self.args["minibatch_size"])
 
         self.scaler = StandardScaler()
         x_train = self.scaler.fit_transform(x_train)
 
-        self.classes = np.unique(y_train)
-        self.num_classes = len(self.classes)
+        model = torch.nn.Sequential(torch.nn.Linear(self.args["num_features"], num_outputs)).to(self.device)
 
-        self.enc = OneHotEncoder()
-        if self.num_classes > 2:
-            y_train = self.enc.fit_transform(y_train.reshape(-1, 1)).toarray()
-
-        # -- model -----------------------------------------------------------------
-        out_dims = self.num_classes if self.num_classes > 2 else 1
-        out_activation = "softmax" if self.num_classes > 2 else "sigmoid"
-        input_layer = tf.keras.layers.Input((x_train.shape[1],))
-        output_layer = tf.keras.layers.Dense(
-            out_dims,
-            activation=out_activation
-        )(input_layer)
-        model = tf.keras.models.Model(
-            inputs=input_layer,
-            outputs=output_layer,
-            name=self.name
-        )
-        model.summary()
-        # Instantiate an optimizer
-        optimizer = tf.keras.optimizers.Adam(learning_rate=args["lr"])
-        # Instantiate a loss function
-        loss_fn = tf.keras.losses.CategoricalCrossentropy() if self.num_classes > 2 else tf.keras.losses.BinaryCrossentropy()
-
-        metrics = ["accuracy"]
-
-        model.compile(
-            optimizer=optimizer,
-            loss=loss_fn,
-            metrics=metrics
+        if num_outputs == 1:
+            loss_function = torch.nn.BCEWithLogitsLoss()
+        else:
+            loss_function = torch.nn.CrossEntropyLoss()
+        optimizer = torch.optim.Adam(model.parameters(), lr=self.args["lr"])
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            factor=0.5,
+            min_lr=1e-8,
+            patience=self.args["patience_lr"]
         )
 
-        # -- validation data -------------------------------------------------------
-        # args["validation_size"] = np.minimum(args["validation_size"], int(0.3 * training_size))
-        if args["validation_size"] < training_size:
+        training_size = x_train.shape[0]
+        if self.args["validation_size"] < training_size:
             x_training, x_validation, y_training, y_validation = train_test_split(
                 x_train, y_train,
-                test_size=args["validation_size"],
+                test_size=self.args["validation_size"],
                 stratify=y_train
             )
 
-            callbacks = [
-                tf.keras.callbacks.ReduceLROnPlateau(
-                    monitor="val_loss",
-                    factor=0.5, min_lr=1e-8,
-                    patience=args["patience_lr"]
-                ),
-            ]
-
-            train_history = model.fit(
-                x_training, y_training,
-                validation_data=(x_validation, y_validation),
-                epochs=args["max_epochs"],
-                callbacks=callbacks,
+            train_data = TensorDataset(
+                torch.tensor(x_training, dtype=torch.float32).to(self.device),
+                torch.tensor(y_training, dtype=torch.long).to(self.device)
             )
+            val_data = TensorDataset(
+                torch.tensor(x_validation, dtype=torch.float32).to(self.device),
+                torch.tensor(y_validation, dtype=torch.long).to(self.device)
+            )
+            train_dataloader = DataLoader(train_data, shuffle=True, batch_size=self.args["minibatch_size"])
+            val_dataloader = DataLoader(val_data, batch_size=self.args["minibatch_size"])
         else:
-            callbacks = [
-                tf.keras.callbacks.ReduceLROnPlateau(
-                    monitor="loss",
-                    factor=0.5, min_lr=1e-8,
-                    patience=args["patience_lr"]
-                ),
-            ]
-
-            train_history = model.fit(
-                x_train, y_train,
-                epochs=args["max_epochs"],
-                callbacks=callbacks,
+            train_data = TensorDataset(
+                torch.tensor(x_train, dtype=torch.float32).to(self.device),
+                torch.tensor(y_train, dtype=torch.long).to(self.device)
             )
-        self.model = model
+            train_dataloader = DataLoader(train_data, shuffle=True, batch_size=self.args["minibatch_size"])
+            val_dataloader = None
+
+        best_loss = np.inf
+        best_model = None
+        stall_count = 0
+        stop = False
+
+        for epoch in range(self.args["max_epochs"]):
+            if epoch > 0 and stop:
+                break
+            model.train()
+
+            # loop over the training set
+            total_train_loss = 0
+            steps = 0
+            for i, data in tqdm(enumerate(train_dataloader), desc=f"epoch: {epoch}", total=train_steps):
+                x, y = data
+
+                y_hat = model(x)
+                if num_outputs == 1:
+                    loss = loss_function(y_hat.sigmoid(), y)
+                else:
+                    yhat = torch.nn.functional.softmax(y_hat, dim=1)
+                    loss = loss_function(yhat, y)
+
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                total_train_loss += loss
+                steps += 1
+
+            total_train_loss = total_train_loss.cpu().detach().numpy() / steps
+
+            if val_dataloader is not None:
+                total_val_loss = 0
+                # switch off autograd for evaluation
+                with torch.no_grad():
+                    # set the model in evaluation mode
+                    model.eval()
+                    for i, data in enumerate(val_dataloader):
+                        x, y = data
+
+                        y_hat = model(x)
+                        if num_outputs == 1:
+                            total_val_loss += loss_function(y_hat.sigmoid(), y)
+                        else:
+                            yhat = torch.nn.functional.softmax(y_hat, dim=1)
+                            total_val_loss += loss_function(yhat, y)
+                total_val_loss = total_val_loss.cpu().detach().numpy() / steps
+                scheduler.step(total_val_loss)
+
+                if total_val_loss >= best_loss:
+                    stall_count += 1
+                    if stall_count >= self.args["patience"]:
+                        stop = True
+                        print(f"\n<Stopped at Epoch {epoch + 1}>")
+                else:
+                    best_loss = total_val_loss
+                    best_model = copy.deepcopy(model)
+                    if not stop:
+                        stall_count = 0
+            else:
+                scheduler.step(total_train_loss)
+                if total_train_loss >= best_loss:
+                    stall_count += 1
+                    if stall_count >= self.args["patience"]:
+                        stop = True
+                        print(f"\n<Stopped at Epoch {epoch + 1}>")
+                else:
+                    best_loss = total_train_loss
+                    best_model = copy.deepcopy(model)
+                    if not stop:
+                        stall_count = 0
+
+        self.model = best_model
+        return self.model
 
     def predict(self, x):
         x = self.scaler.transform(x)
 
-        yhat = self.model.predict(x)
-        if self.num_classes > 2:
-            yhat = self.classes[np.argmax(yhat, axis=1)]
-        else:
-            yhat = np.round(yhat)
+        with torch.no_grad():
+            # set the model in evaluation mode
+            self.model.eval()
 
-        return yhat
+            yhat = self.model(torch.tensor(x, dtype=torch.float32).to(self.device))
+
+            if self.num_classes > 2:
+                yhat = self.classes[np.argmax(yhat.cpu().detach().numpy(), axis=1)]
+            else:
+                yhat = torch.sigmoid(yhat)
+                yhat = np.round(yhat.cpu().detach().numpy())
+
+            return yhat
